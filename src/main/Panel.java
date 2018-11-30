@@ -5,98 +5,189 @@
  */
 package main;
 
+import java.awt.Color;
 import java.awt.Component;
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 /**
  *
  * @author JLHiciano
  */
-public class Panel extends javax.swing.JFrame {
+public final class Panel extends javax.swing.JFrame {
 
     String [] bolas = {"blanca","negra","roja","azul","morada"};
     char [] casillas = {'1','2','3','4','5','6','7','8','9','X','X','X','R','D','O','/'};
-    Participante [] participante= new Participante[50];
+    ArrayList<Participante> participantes;
+    ArrayList<Casilla> cDispobibles;
+    ArrayList<Casilla> cElegidas;
     Random rand = new Random();
     Participante[] jugadores = new Participante[20];
     
     ArrayList<String> elementos;
-    ArrayList<Participante> part_restantes;
-    public Panel() {
+    public Panel()  {
         initComponents();
         
-        part_restantes = new ArrayList<>();
+        participantes = new ArrayList<>();
         //Instanciando los vectores
         for(int x=0 ; x<50 ; x++)
         {
-            participante[x] = new Participante();
-            part_restantes.add(participante[x]);//Agregando los participante
-                    
+            participantes.add(new Participante());
+            
             if(x<20)
                 jugadores[x] = new Participante();
         }
         
-        
         int elegidos= 0;//Cantidad de elegidos
-        
-        
         //Seleccionando los participantes
-        for(int x=0 ; x<50 ; x++)
+        while(elegidos<20)
         {
-            System.out.println("Participante #"+x);
-            tomarBolas(x);
-            setCantJugadas(x);
-            if(participante[x].jugadas>0) 
+            for(int x=0 ; x<participantes.size() ; x++)
             {
-                jugadores[elegidos] = participante[x];
-                elegidos++;
-                if(elegidos == 20)
-                    break;
+                System.out.println("Participante #"+x);
+                tomarBolas(x);
+                setCantJugadas(x);
+                if(participantes.get(x).jugadas>0) 
+                {
+                    jugadores[elegidos] = participantes.get(x);
+                    elegidos++;
+                    if(elegidos == 20)
+                        break;
+                }
             }
         }
         
-        
-        //No siempre se llenan los 20 se puede arreglar con una lista
-        for(int x=0 ; x<20 ; x++)
+        resetPanel();  
+    } 
+    public void pulsaciones(){
+        for(int x=0;x<jugadores.length;x++)
         {
-            System.out.println(x+"  -  "+jugadores[x].jugadas);
+            int pulsaciones = jugadores[x].jugadas * 10;
+            for(int i = 0; i< pulsaciones;i++)
+            {
+                pulsacion();
+            }
         }
-        
-        
     }
-    
-    public void jugar(){
+    public void pulsacion(){
         int casilla = rand.nextInt(16);
         char element = casillas[casilla];
-        int boton = rand.nextInt(16);
-        pintarBoton(element,boton);    
+        int boton = rand.nextInt(16)+1;
+        pintarBoton(element,boton); 
+        System.out.println("pulso");
     }
-    
-    public void pintarBoton(char element,int boton)
-    {
+    public void pintarBoton(char element,int boton){
+        
+        
+        if(boton <= 8)
+        {
+            if(boton == 1)
+            {
+                jButton1.setText(Character.toString(element));
+            }
+            
+            if(boton == 2)
+            {
+                jButton2.setText(Character.toString(element));
+            }
+            
+            if(boton == 3)
+            {
+                jButton3.setText(Character.toString(element));
+            }
+            
+            if(boton == 4)
+            {
+                jButton4.setText(Character.toString(element));
+            }
+            
+            if(boton == 5)
+            {
+                jButton5.setText(Character.toString(element));
+            }
+            
+            if(boton == 6)
+            {
+                jButton6.setText(Character.toString(element));
+            }
+            
+            if(boton == 7)
+            {
+                jButton7.setText(Character.toString(element));
+            }
+            
+            if(boton == 8)
+            {
+                jButton8.setText(Character.toString(element));
+            }
+        }
+        else
+        {
+            if(boton == 9)
+            {
+                jButton9.setText(Character.toString(element));
+            }
+            
+            if(boton == 10)
+            {
+                jButton10.setText(Character.toString(element));
+            }
+            
+            if(boton == 11)
+            {
+                jButton11.setText(Character.toString(element));
+            }
+            
+            if(boton == 12)
+            {
+                jButton12.setText(Character.toString(element));
+            }
+            
+            if(boton == 13)
+            {
+                jButton13.setText(Character.toString(element));
+            }
+            
+            if(boton == 14)
+            {
+                jButton14.setText(Character.toString(element));
+            }
+            
+            if(boton == 15)
+            {
+                jButton15.setText(Character.toString(element));
+            }
+            
+            if(boton == 16)
+            {
+                jButton16.setText(Character.toString(element));
+            }
+        }
+        
+        
         
     }
-    
-    public void resetPanel()
-    {
-        JFrame theFrame = this;
-        Component[] components = theFrame.getComponents();
+    public void resetPanel(){
+        Component[] components = this.getContentPane().getComponents();  
         for(Component component : components)
         {
-            if(component instanceof JButton)
-            {
+            if(component instanceof JButton){
+      
                 JButton button = (JButton) component;
                 button.setText("?");
+                    
+                
             }
         }
     }
-    
-    public  void tomarBolas(int x) 
-    {
+    public  void tomarBolas(int x) {
         //se llena una lista para poder sacarlas cuando el participante las elija
         ArrayList<String> bolas_restantes = new ArrayList<>();
         for(int i = 0 ; i<4 ; i++)
@@ -107,36 +198,34 @@ public class Panel extends javax.swing.JFrame {
         //se le dan 3 oportunidades para sacar bolas al participante 
         for(int i=0 ; i<3 ; i++)
         {
-            System.out.println(participante[x]);
+            System.out.println(participantes.get(x));
             int numero = rand.nextInt((bolas_restantes.size()));
             String color = bolas_restantes.get(numero);
-            participante[x].bolas[i] = color;
+            participantes.get(x).bolas[i] = color;
             bolas_restantes.remove(numero);
         }
 
-        System.out.println("BOLA 1 "+participante[x].bolas[0]+"\n"
-                +"BOLA 2 "+participante[x].bolas[1]+"\n"
-                +"BOLA 3 "+participante[x].bolas[2]);
+        System.out.println("BOLA 1 "+participantes.get(x).bolas[0]+"\n"
+                +"BOLA 2 "+participantes.get(x).bolas[1]+"\n"
+                +"BOLA 3 "+participantes.get(x).bolas[2]);
     }
-    
-    public  void setCantJugadas(int x) 
-    {
+    public  void setCantJugadas(int x) {
 
         int cant_jugadas = 0;
-        if(busca_bola(participante[x].bolas,"blanca"))
+        if(busca_bola(participantes.get(x).bolas,"blanca"))
         {
             System.err.println("Murio por blanca");
-            participante[x].jugadas = 0;
+            participantes.get(x).jugadas = 0;
         }
         else
         {
             boolean sale = false;
-            if(busca_bola(participante[x].bolas,"negra") && !busca_bola(participante[x].bolas,"roja"))
+            if(busca_bola(participantes.get(x).bolas,"negra") && !busca_bola(participantes.get(x).bolas,"roja"))
             {
                 System.err.println("murio por negra y roja");
-                participante[x].jugadas = 0;
+                participantes.get(x).jugadas = 0;
             }
-            else if(busca_bola(participante[x].bolas,"negra") && busca_bola(participante[x].bolas,"roja"))
+            else if(busca_bola(participantes.get(x).bolas,"negra") && busca_bola(participantes.get(x).bolas,"roja"))
             {
                 //Se le dan 2 oportunidades para sacar 3 bolas en cada una
                 for(int a=0 ; a < 2 ; a++)
@@ -153,67 +242,65 @@ public class Panel extends javax.swing.JFrame {
                     {
                         int numero = rand.nextInt(bolas_restantes.size());
                         String color = bolas[numero];
-                        participante[x].bolas[i] = color;
+                        participantes.get(x).bolas[i] = color;
                         bolas_restantes.remove(numero);
                     }
 
-                    if(busca_bola(participante[x].bolas,"negra") && !busca_bola(participante[x].bolas,"roja")){
+                    if(busca_bola(participantes.get(x).bolas,"negra") && !busca_bola(participantes.get(x).bolas,"roja")){
                         sale = true;
                         System.err.println("Murio negra y no roja");
                         continue;
                     }
                     else{
                         cant_jugadas += 1;
-                        participante[x].chance_extra = true;
+                        participantes.get(x).chance_extra = true;
                         System.err.println("Chance extra negra y roja");
                     }
                 }           
             }
 
             if(sale){
-                participante[x].jugadas = 0;
+                participantes.get(x).jugadas = 0;
             }
 
-            if(!busca_bola(participante[x].bolas,"morada"))
+            if(!busca_bola(participantes.get(x).bolas,"morada"))
             {
                 cant_jugadas += 4;
             }
 
-            if(participante[x].bolas[0].equals("roja") 
-                && participante[x].bolas[1].equals("morada") 
-                && participante[x].bolas[2].equals("azul") )
+            if(participantes.get(x).bolas[0].equals("roja") 
+                && participantes.get(x).bolas[1].equals("morada") 
+                && participantes.get(x).bolas[2].equals("azul") )
             {
                 cant_jugadas += 3;
             }
 
-            if(participante[x].bolas[0].equals("morada") 
-                && participante[x].bolas[1].equals("roja") 
-                && participante[x].bolas[2].equals("azul") )
+            if(participantes.get(x).bolas[0].equals("morada") 
+                && participantes.get(x).bolas[1].equals("roja") 
+                && participantes.get(x).bolas[2].equals("azul") )
             {
                 cant_jugadas += 3;
             }
 
-            if(participante[x].bolas[0].equals("roja") 
-                && participante[x].bolas[1].equals("morada") 
-                && participante[x].bolas[2].equals("azul") )
+            if(participantes.get(x).bolas[0].equals("roja") 
+                && participantes.get(x).bolas[1].equals("morada") 
+                && participantes.get(x).bolas[2].equals("azul") )
             {
                 cant_jugadas += 2;
             }
 
-            if(participante[x].bolas[0].equals("azul") 
-                && participante[x].bolas[1].equals("roja") 
-                && participante[x].bolas[2].equals("morada") )
+            if(participantes.get(x).bolas[0].equals("azul") 
+                && participantes.get(x).bolas[1].equals("roja") 
+                && participantes.get(x).bolas[2].equals("morada") )
             {
                 cant_jugadas += 3;
             }
-            participante[x].jugadas = cant_jugadas;
+            participantes.get(x).jugadas = cant_jugadas;
 
         }
 
     }
-    
-    public  boolean busca_bola(String [] bolas,String color)
-    {
+    public  boolean busca_bola(String [] bolas,String color){
         for(int x=0 ; x<bolas.length ; x++)
         {
             if(bolas[x].equals(color))
@@ -251,8 +338,8 @@ public class Panel extends javax.swing.JFrame {
         jButton14 = new javax.swing.JButton();
         jButton15 = new javax.swing.JButton();
         jButton16 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        btnSimular = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -304,30 +391,31 @@ public class Panel extends javax.swing.JFrame {
         jButton16.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         jButton16.setText("?");
 
-        jPanel1.setBackground(new java.awt.Color(153, 153, 153));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 268, Short.MAX_VALUE)
-        );
-
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+
+        btnSimular.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        btnSimular.setText(">");
+        btnSimular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimularActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 448, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(118, 118, 118)
+                .addComponent(btnSimular, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(157, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(148, 148, 148)
+                .addComponent(btnSimular, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -336,52 +424,50 @@ public class Panel extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -404,15 +490,54 @@ public class Panel extends javax.swing.JFrame {
                             .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(286, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSimularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimularActionPerformed
+        Thread hilo = new Thread( new PintaPantalla());
+        hilo.setDaemon(true);
+        hilo.start();
+    }//GEN-LAST:event_btnSimularActionPerformed
+    
+    private class Casilla {
+        public char valor;
+        public int pos;
+    }
+    
+    private class PintaPantalla implements Runnable { 
+  
+        public void run() 
+        { 
+            try {
+                //System.out.println(Thread.currentThread().getName()
+                //                 + ", executing run() method!");
+                for(int x=0;x<jugadores.length;x++)
+                {
+                     
+                    for(int i = 0; i< jugadores[x].jugadas;i++)
+                    {
+                        int pulsaciones = 10;
+                        while(pulsaciones>=1)
+                        {
+                            sleep(750);
+                            pulsacion();
+                            
+                            pulsaciones--;
+                        }
+                        resetPanel();
+                    }
+                }
+                
+                
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Panel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+    } 
     /**
      * @param args the command line arguments
      */
@@ -443,12 +568,15 @@ public class Panel extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                
                 new Panel().setVisible(true);
+                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSimular;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -465,7 +593,6 @@ public class Panel extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }

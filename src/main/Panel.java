@@ -76,7 +76,7 @@ public final class Panel extends javax.swing.JFrame {
             }
         }
     }
-    public void pulsacion(){
+    public char pulsacion(){
         int casilla = rand.nextInt(cDispobibles.size());
         char element = cDispobibles.get(casilla).valor;
         cDispobibles.remove(casilla);//se saca el valor para que no siga apareciendo
@@ -88,6 +88,7 @@ public final class Panel extends javax.swing.JFrame {
         cElegidas.add(c);
         pintarBoton(element,boton); 
         System.out.println("pulso");
+        return element;
     }
     public boolean isPlayedPosition(int pos){
         for(Casilla cas : cElegidas){
@@ -583,9 +584,34 @@ public final class Panel extends javax.swing.JFrame {
                         while(pulsaciones>=1)
                         {
                             sleep(1000);
-                            pulsacion();
-                            
+                            char elemento = pulsacion();
                             pulsaciones--;
+                            
+                            try{
+                                int numero = Integer.parseInt(Character.toString(elemento));
+                            }
+                            catch(Exception e){
+                                if(elemento == 'X'){
+                                    jugadores[x].chances--;
+                                    if(jugadores[x].chances == 0)
+                                        jugadores[x].perdedor();
+                                }
+                                if(elemento == 'R'){}
+                                if(elemento == 'D'){}
+                                if(elemento == 'O'){
+                                    jugadores[x].chances--;
+                                    if(jugadores[x].chances == 0)
+                                        jugadores[x].perdedor();
+                                }
+                                if(elemento == '/'){
+                                    if(jugadores[x].money == 0)
+                                        jugadores[x].money = -500;
+                                    
+                                    else
+                                        jugadores[x].money = jugadores[x].money/2;
+                                }
+                                
+                            }
                         }
                         resetPanel();
                     }
